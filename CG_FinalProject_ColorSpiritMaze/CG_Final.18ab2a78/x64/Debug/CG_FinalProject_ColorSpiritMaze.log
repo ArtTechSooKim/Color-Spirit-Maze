@@ -1,0 +1,9 @@
+﻿  Camera.cpp
+  main.cpp
+  Maze.cpp
+  SOR.cpp
+C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+C:\Projects\CG_FinalProject_ColorSpiritMaze\main.cpp(1,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+C:\Projects\CG_FinalProject_ColorSpiritMaze\Maze.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+C:\Projects\CG_FinalProject_ColorSpiritMaze\SOR.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+  코드를 생성하고 있습니다...
