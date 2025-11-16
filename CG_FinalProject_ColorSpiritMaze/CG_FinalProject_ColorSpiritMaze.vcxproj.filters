@@ -39,4 +39,17 @@
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="stb_image.h.txt">
+      <Filter>헤더 파일</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="CG_Final.18ab2a78\Debug\floor_texture.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+    <Image Include="CG_Final.18ab2a78\Debug\wall_texture.png">
+      <Filter>리소스 파일</Filter>
+    </Image>
+  </ItemGroup>
 </Project>
