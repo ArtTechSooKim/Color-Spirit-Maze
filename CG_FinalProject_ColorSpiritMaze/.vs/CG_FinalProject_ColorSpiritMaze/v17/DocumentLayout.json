@@ -1,34 +1,34 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\",
+  "WorkspaceRootPath": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:Camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\SOR.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:SOR.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Maze.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Maze.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:Maze.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Maze.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:Camera.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Maze.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:Maze.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\SOR.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:SOR.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Camera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:Camera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Camera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:Camera.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\SOR.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:SOR.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\SOR.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{18AB2A78-6DEB-4E39-80F1-04B17C713E27}|CG_FinalProject_ColorSpiritMaze.vcxproj|solutionrelative:SOR.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -38,15 +38,32 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 1,
+              "Title": "Camera.cpp",
+              "DocumentMoniker": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Camera.cpp",
+              "RelativeDocumentMoniker": "Camera.cpp",
+              "ToolTip": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Camera.cpp",
+              "RelativeToolTip": "Camera.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFsAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-11-13T10:59:55.508Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{1c4feeaa-4718-4aa9-859d-94ce25d182ba}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
               "Title": "SOR.cpp",
-              "DocumentMoniker": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\SOR.cpp",
+              "DocumentMoniker": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\SOR.cpp",
               "RelativeDocumentMoniker": "SOR.cpp",
-              "ToolTip": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\SOR.cpp",
+              "ToolTip": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\SOR.cpp",
               "RelativeToolTip": "SOR.cpp",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
@@ -54,11 +71,11 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "SOR.h",
-              "DocumentMoniker": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\SOR.h",
+              "DocumentMoniker": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\SOR.h",
               "RelativeDocumentMoniker": "SOR.h",
-              "ToolTip": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\SOR.h",
+              "ToolTip": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\SOR.h",
               "RelativeToolTip": "SOR.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
@@ -66,64 +83,52 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 0,
               "Title": "Maze.cpp",
-              "DocumentMoniker": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Maze.cpp",
+              "DocumentMoniker": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Maze.cpp",
               "RelativeDocumentMoniker": "Maze.cpp",
-              "ToolTip": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Maze.cpp",
+              "ToolTip": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Maze.cpp",
               "RelativeToolTip": "Maze.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAB4AAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAQAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-13T11:00:21.649Z"
+              "WhenOpened": "2025-11-13T11:00:21.649Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 2,
               "Title": "Maze.h",
-              "DocumentMoniker": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Maze.h",
+              "DocumentMoniker": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Maze.h",
               "RelativeDocumentMoniker": "Maze.h",
-              "ToolTip": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Maze.h",
+              "ToolTip": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Maze.h",
               "RelativeToolTip": "Maze.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAATAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-11-13T11:00:08.756Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "Camera.cpp",
-              "DocumentMoniker": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Camera.cpp",
-              "RelativeDocumentMoniker": "Camera.cpp",
-              "ToolTip": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Camera.cpp",
-              "RelativeToolTip": "Camera.cpp",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-13T10:59:55.508Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
+              "DocumentIndex": 3,
               "Title": "Camera.h",
-              "DocumentMoniker": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Camera.h",
+              "DocumentMoniker": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Camera.h",
               "RelativeDocumentMoniker": "Camera.h",
-              "ToolTip": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\Camera.h",
+              "ToolTip": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\Camera.h",
               "RelativeToolTip": "Camera.h",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABcAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
               "WhenOpened": "2025-11-13T10:59:44.42Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 4,
               "Title": "main.cpp",
-              "DocumentMoniker": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\main.cpp",
+              "DocumentMoniker": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\main.cpp",
               "RelativeDocumentMoniker": "main.cpp",
-              "ToolTip": "C:\\Projects\\CG_FinalProject_ColorSpiritMaze\\main.cpp",
+              "ToolTip": "C:\\Users\\wndms\\source\\repos\\Color-Spirit-Maze\\CG_FinalProject_ColorSpiritMaze\\main.cpp",
               "RelativeToolTip": "main.cpp",
-              "ViewState": "AgIAADgAAAAAAAAAAAAAADQAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAAADQAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
-              "WhenOpened": "2025-11-13T10:37:34.624Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-11-13T10:37:34.624Z"
             }
           ]
         }

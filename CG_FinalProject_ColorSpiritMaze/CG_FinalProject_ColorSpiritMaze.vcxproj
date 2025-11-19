@@ -139,6 +139,13 @@
     <ClInclude Include="Maze.h" />
     <ClInclude Include="SOR.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="stb_image.h.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="CG_Final.18ab2a78\Debug\floor_texture.png" />
+    <Image Include="CG_Final.18ab2a78\Debug\wall_texture.png" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
