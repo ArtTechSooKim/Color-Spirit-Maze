@@ -2,17 +2,13 @@
 #include "Camera.h"
 #include "Maze.h"
 #include "SOR.h"
+#include "SpiritManager.h"
 
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
-// 전역 포인터 객체 (GLUT 콜백 때문에 필요)
 Camera* g_camera;
 Maze* g_maze;
 SOR* g_sor;
+SpiritManager* g_spirit;
 
-// ---- Wrapper 함수들 ----
 void mouseButtonWrapper(int btn, int state, int x, int y) {
     g_camera->mouseButton(btn, state, x, y);
 }
@@ -20,7 +16,6 @@ void mouseMotionWrapper(int x, int y) {
     g_camera->mouseMotion(x, y);
 }
 
-// ---- Display 함수 ----
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -28,49 +23,52 @@ void display() {
     glLoadIdentity();
 
     g_camera->apply();
-
     g_maze->draw();
 
     glPushMatrix();
     glTranslatef(0, 1.0f, 0);
-    glColor3f(1, 0.2f, 0.2f);
     g_sor->draw();
     glPopMatrix();
+
+    g_spirit->drawSpirits();
 
     glutSwapBuffers();
 }
 
-// ---- Reshape ----
 void reshape(int w, int h) {
     glViewport(0, 0, w, h);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, (float)w / h, 0.1, 100);
+    gluPerspective(60, (float)w / h, 1.0, 500.0);
 
     glMatrixMode(GL_MODELVIEW);
 }
 
-// ---- Keyboard ----
 void keyboard(unsigned char key, int x, int y) {
     if (key == 'w') g_camera->moveForward(0.2f);
     if (key == 's') g_camera->moveBackward(0.2f);
     if (key == 'a') g_camera->moveLeft(0.2f);
     if (key == 'd') g_camera->moveRight(0.2f);
-
     glutPostRedisplay();
 }
 
-// ---- main ----
 int main(int argc, char** argv) {
-    // 전역 객체 초기화
     g_camera = new Camera();
     g_maze = new Maze();
     g_sor = new SOR();
+    g_spirit = new SpiritManager();
 
-    g_sor->generateFakeSphere();
+    // ★ 반드시 있어야 한다! (핵심 버그 해결)
+    g_spirit->maze = g_maze;
 
-    // GLUT 초기화
+    // 3D 모델 한 번만 생성
+    g_sor->generateTorchSpirit();
+    g_spirit->sorModel.generateTorchSpirit();
+
+    // 정령 초기화
+    g_spirit->initSpirits();
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
@@ -78,13 +76,16 @@ int main(int argc, char** argv) {
 
     glEnable(GL_DEPTH_TEST);
 
-    // 콜백 등록
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouseButtonWrapper);
     glutMotionFunc(mouseMotionWrapper);
-    glutIdleFunc([]() { glutPostRedisplay(); });
+
+    glutIdleFunc([]() {
+        g_spirit->updateSpiritCollision(g_camera->x, g_camera->y, g_camera->z);
+        glutPostRedisplay();
+        });
 
     glutMainLoop();
     return 0;

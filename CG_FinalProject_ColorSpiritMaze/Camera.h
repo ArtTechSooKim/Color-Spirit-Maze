@@ -10,7 +10,7 @@ public:
 
     Camera();
 
-    void apply();              // gluLookAt Àû¿ë
+    void apply();
     void moveForward(float s);
     void moveBackward(float s);
     void moveLeft(float s);
@@ -21,3 +21,5 @@ public:
 private:
     void getDirection(float& dx, float& dy, float& dz);
 };
+
+extern Camera* g_camera;
