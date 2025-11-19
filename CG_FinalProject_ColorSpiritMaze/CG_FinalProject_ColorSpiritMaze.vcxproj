@@ -133,11 +133,13 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maze.cpp" />
     <ClCompile Include="SOR.cpp" />
+    <ClCompile Include="SpiritManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Maze.h" />
     <ClInclude Include="SOR.h" />
+    <ClInclude Include="SpiritManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="stb_image.h.txt" />

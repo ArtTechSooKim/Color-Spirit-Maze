@@ -1,7 +1,8 @@
-﻿#include <GL/glut.h>
+#include <GL/glut.h>
 #include "Camera.h"
 #include "Maze.h"
 #include "SOR.h"
+#include "SpiritManager.h"
 
 #include <string>
 #include <sstream>
@@ -16,6 +17,7 @@
 Camera* g_camera;
 Maze* g_maze;
 SOR* g_sor;
+SpiritManager* g_spirit;
 
 // 게임 상태
 enum GameState { Playing, Ended };
@@ -114,7 +116,6 @@ void display() {
     glLoadIdentity();
 
     g_camera->apply();
-
     g_maze->draw();
 
     glPushMatrix();
@@ -125,97 +126,49 @@ void display() {
 
     // UI 오버레이는 마지막에 그림
     drawOverlay();
+    g_sor->draw();
+    glPopMatrix();
+
+    g_spirit->drawSpirits();
 
     glutSwapBuffers();
 }
 
-// ---- Reshape ----
 void reshape(int w, int h) {
     if (h == 0) h = 1;
     glViewport(0, 0, w, h);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, (float)w / h, 0.1, 100);
+    gluPerspective(60, (float)w / h, 1.0, 500.0);
 
     glMatrixMode(GL_MODELVIEW);
 }
 
-// ---- Keyboard ----
 void keyboard(unsigned char key, int x, int y) {
-    if (g_state == Ended) {
-        if (key == 27) { // ESC
-            exit(0);
-        }
-        return;
-    }
-
-    if (key == 'w') g_camera->moveForward(g_moveSpeed);
-    if (key == 's') g_camera->moveBackward(g_moveSpeed);
-    if (key == 'a') g_camera->moveLeft(g_moveSpeed);
-    if (key == 'd') g_camera->moveRight(g_moveSpeed);
-
-    if (key == 27) { // ESC
-        exit(0);
-    }
-
+    if (key == 'w') g_camera->moveForward(0.2f);
+    if (key == 's') g_camera->moveBackward(0.2f);
+    if (key == 'a') g_camera->moveLeft(0.2f);
+    if (key == 'd') g_camera->moveRight(0.2f);
     glutPostRedisplay();
 }
 
-// ---- Idle (타이머/수집/버프 등 업데이트) ----
-void idleFunc() {
-    int now = glutGet(GLUT_ELAPSED_TIME);
-    if (g_lastTimeMs == 0) g_lastTimeMs = now;
-    float delta = (now - g_lastTimeMs) / 1000.0f;
-    g_lastTimeMs = now;
-
-    if (g_state == Playing) {
-        // 타이머 감소
-        g_timeRemaining -= delta;
-        if (g_timeRemaining <= 0.0f) {
-            g_timeRemaining = 0.0f;
-            g_state = Ended;
-        }
-
-        // 정령 수집 검사: SOR가 발견되면 카운트 증가 또는 버프 적용
-        int dR = 0, dG = 0, dB = 0;
-        float buffAdd = 0.0f;
-        g_sor->checkCollection(g_camera->x, g_camera->y, g_camera->z, dR, dG, dB, buffAdd);
-        if (dR || dG || dB) {
-            g_countR += dR;
-            g_countG += dG;
-            g_countB += dB;
-        }
-        if (buffAdd > 0.0f) {
-            // 속도 버프 적용 (지속시간 누적)
-            g_speedBuffTime += buffAdd;
-            g_moveSpeed = g_baseSpeed * 2.0f; // 예: 2배
-        }
-
-        // 버프 타이머 업데이트
-        if (g_speedBuffTime > 0.0f) {
-            g_speedBuffTime -= delta;
-            if (g_speedBuffTime <= 0.0f) {
-                g_speedBuffTime = 0.0f;
-                g_moveSpeed = g_baseSpeed;
-            }
-        }
-    }
-
-    glutPostRedisplay();
-}
-
-// ---- main ----
 int main(int argc, char** argv) {
-    // 전역 객체 초기화
     g_camera = new Camera();
     g_maze = new Maze();
     g_sor = new SOR();
+    g_spirit = new SpiritManager();
 
-    // SOR의 내부 구현은 건드리지 않음 — 기존 generateFakeSphere 호출 유지
-    g_sor->generateFakeSphere();
+    // ★ 반드시 있어야 한다! (핵심 버그 해결)
+    g_spirit->maze = g_maze;
 
-    // GLUT 초기화
+    // 3D 모델 한 번만 생성
+    g_sor->generateTorchSpirit();
+    g_spirit->sorModel.generateTorchSpirit();
+
+    // 정령 초기화
+    g_spirit->initSpirits();
+
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(800, 600);
@@ -223,16 +176,16 @@ int main(int argc, char** argv) {
 
     glEnable(GL_DEPTH_TEST);
 
-    // 콜백 등록
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyboard);
     glutMouseFunc(mouseButtonWrapper);
     glutMotionFunc(mouseMotionWrapper);
-    glutIdleFunc(idleFunc);
 
-    // 초기 시간
-    g_lastTimeMs = glutGet(GLUT_ELAPSED_TIME);
+    glutIdleFunc([]() {
+        g_spirit->updateSpiritCollision(g_camera->x, g_camera->y, g_camera->z);
+        glutPostRedisplay();
+        });
 
     glutMainLoop();
     return 0;

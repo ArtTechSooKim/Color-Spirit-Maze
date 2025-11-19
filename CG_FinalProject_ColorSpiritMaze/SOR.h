@@ -9,6 +9,6 @@ class SOR {
 public:
     std::vector<Vertex> vertices;
 
-    void generateFakeSphere();
     void draw();
+    void generateTorchSpirit();
 };

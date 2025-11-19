@@ -3,12 +3,13 @@
 
 class Maze {
 public:
-    Maze();
+    static const int SIZE = 30;
+    int mazeData[SIZE][SIZE];
 
-    void initTextures(); // ÅØ½ºÃ³ ·Îµå (main¿¡¼­ ÇÑ ¹ø È£Ãâ)
+    Maze();
     void draw();
 
-    // Ãæµ¹ °Ë»ç: ÇÃ·¹ÀÌ¾îÀÇ x,z ÁÂÇ¥¿Í ¹ÝÁö¸§(r)·Î º®°ú Ãæµ¹ÇÏ´ÂÁö °Ë»ç
+    // ï¿½æµ¹ ï¿½Ë»ï¿½: ï¿½Ã·ï¿½ï¿½Ì¾ï¿½ï¿½ï¿½ x,z ï¿½ï¿½Ç¥ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(r)ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½æµ¹ï¿½Ï´ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
     bool checkCollision(float px, float pz, float radius = 0.2f);
 
 private:
