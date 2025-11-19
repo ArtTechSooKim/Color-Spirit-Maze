@@ -1,42 +1,36 @@
 ﻿#include "SpiritManager.h"
-#include "Camera.h"
 #include <GL/glut.h>
 #include <cmath>
-#include <cstdlib>
 
 void SpiritManager::initSpirits() {
-    // 정령 모델 생성
-    sorModel.generateTorchSpirit();
+    model.init();
 
-    // 정령 위치 (지금은 기본값 0,0 → 네가 수정할 부분)
-    std::vector<std::pair<float, float>> positions = {
-        {-10.0f, -12.0f},  // 1번
-        {5.0f, 8.0f},  // 2번
-        {-5.0f, -8.0f},  // 3번
-        {10.0f, 12.0f},  // 4번
-        {1.0f, 10.0f},  // 5번
-        {9.0f, -8.0f},  // 6번
-        {-13.0f, 4.0f},  // 7번
-        {3.0f, -6.0f}   // 8번
+    // 9개 정령 위치 (원하는대로 수정 가능)
+    std::vector<std::pair<float, float>> pos = {
+        {-9.0f, -11.0f},
+        {-5.0f,   -3.0f},
+        { -2.0f,   6.0f},
+        {  3.0f,  -8.0f},
+        {  7.0f,   4.0f},
+        { 9.0f, -10.0f},
+        { -9.0f,   8.0f},
+        {  5.0f,  10.0f},
+        {  3.5f,  2.0f}
     };
 
-    for (int i = 0; i < 8; i++) {
-        Spirit s;
-        s.x = positions[i].first;
-        s.z = positions[i].second;
-        s.y = -0.5f;
+    spirits.clear();
+    spirits.reserve(9);
 
-        // 번호별 색 할당
-        switch (i) {
-        case 0: s.r = 1; s.g = 0; s.b = 0; break;       // 1번 빨
-        case 1: s.r = 0; s.g = 1; s.b = 0; break;       // 2번 초
-        case 2: s.r = 0; s.g = 0; s.b = 1; break;       // 3번 파
-        case 3: s.r = 1; s.g = 0; s.b = 0; break;       // 4번 빨
-        case 4: s.r = 0; s.g = 1; s.b = 0; break;       // 5번 초
-        case 5: s.r = 0; s.g = 0; s.b = 1; break;       // 6번 파
-        case 6: s.r = 1; s.g = 0; s.b = 0; break;       // 7번 빨
-        case 7: s.r = 0; s.g = 1; s.b = 0; break;       // 8번 초
-        }
+    for (int i = 0; i < 9; i++) {
+        Spirit s;
+        s.x = pos[i].first;
+        s.z = pos[i].second;
+        s.yOffset = 0.2f;
+
+        // 타입: R → G → B 반복
+        if (i % 3 == 0)      s.type = RED_SPIRIT;
+        else if (i % 3 == 1) s.type = GREEN_SPIRIT;
+        else                 s.type = BLUE_SPIRIT;
 
         spirits.push_back(s);
     }
@@ -49,11 +43,14 @@ void SpiritManager::drawSpirits() {
         if (s.collected) continue;
 
         glPushMatrix();
-        glTranslatef(s.x, s.y + sin(time) * 0.1f, s.z);
-        glRotatef(time * 20, 0, 1, 0);
+        // 통통하게 둥둥 떠다니는 느낌
+        float bob = std::sin(time) * 0.1f;
+        glTranslatef(s.x, s.yOffset + bob, s.z);
 
-        glColor3f(s.r, s.g, s.b);
-        sorModel.draw();
+        // 천천히 회전
+        glRotatef(time * 20.0f, 0, 1, 0);
+
+        model.draw(s.type);
         glPopMatrix();
     }
 }
@@ -64,14 +61,11 @@ void SpiritManager::updateSpiritCollision(float px, float py, float pz) {
 
         float dx = px - s.x;
         float dz = pz - s.z;
-        float dist = sqrt(dx * dx + dz * dz);
+        float dist = std::sqrt(dx * dx + dz * dz);
 
-        if (dist < 0.7f) {
+        if (dist < 0.8f) {
             s.collected = true;
-
-            if (s.r) Rcount++;
-            if (s.g) Gcount++;
-            if (s.b) Bcount++;
+            // TODO: 필요하면 여기에서 RGB 카운트 증가 등 처리
         }
     }
 }

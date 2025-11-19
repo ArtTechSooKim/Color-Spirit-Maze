@@ -1,23 +1,21 @@
-#pragma once
+﻿#pragma once
 #include <vector>
-#include "SOR.h"
 #include "Maze.h"
+#include "SpiritModel.h"
 
 struct Spirit {
     float x, y, z;
-    float r, g, b;
+    float yOffset;        // 약간 띄우기용 높이
+    SpiritType type;      // RED, GREEN, BLUE
     bool collected = false;
 };
 
 class SpiritManager {
 public:
     std::vector<Spirit> spirits;
-    SOR sorModel;
     Maze* maze = nullptr;
 
-    int Rcount = 0;
-    int Gcount = 0;
-    int Bcount = 0;
+    SpiritModel model;
 
     void initSpirits();
     void drawSpirits();

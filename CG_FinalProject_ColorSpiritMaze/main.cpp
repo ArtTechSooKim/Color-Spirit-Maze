@@ -1,19 +1,18 @@
 ﻿#include <GL/glut.h>
 #include "Camera.h"
 #include "Maze.h"
-#include "SOR.h"
 #include "SpiritManager.h"
 
 Camera* g_camera;
 Maze* g_maze;
-SOR* g_sor;
 SpiritManager* g_spirit;
 
+// 마우스 입력 래퍼
 void mouseButtonWrapper(int btn, int state, int x, int y) {
-    g_camera->mouseButton(btn, state, x, y);
+    if (g_camera) g_camera->mouseButton(btn, state, x, y);
 }
 void mouseMotionWrapper(int x, int y) {
-    g_camera->mouseMotion(x, y);
+    if (g_camera) g_camera->mouseMotion(x, y);
 }
 
 void display() {
@@ -23,13 +22,11 @@ void display() {
     glLoadIdentity();
 
     g_camera->apply();
+
+    // 미로
     g_maze->draw();
 
-    glPushMatrix();
-    glTranslatef(0, 1.0f, 0);
-    g_sor->draw();
-    glPopMatrix();
-
+    // 정령
     g_spirit->drawSpirits();
 
     glutSwapBuffers();
@@ -40,7 +37,7 @@ void reshape(int w, int h) {
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60, (float)w / h, 1.0, 500.0);
+    gluPerspective(60.0, (float)w / (float)h, 1.0, 500.0);
 
     glMatrixMode(GL_MODELVIEW);
 }
@@ -50,31 +47,28 @@ void keyboard(unsigned char key, int x, int y) {
     if (key == 's') g_camera->moveBackward(0.2f);
     if (key == 'a') g_camera->moveLeft(0.2f);
     if (key == 'd') g_camera->moveRight(0.2f);
+    if (key == 27)  exit(0);  // ESC
+
     glutPostRedisplay();
 }
 
 int main(int argc, char** argv) {
     g_camera = new Camera();
     g_maze = new Maze();
-    g_sor = new SOR();
     g_spirit = new SpiritManager();
 
-    // ★ 반드시 있어야 한다! (핵심 버그 해결)
     g_spirit->maze = g_maze;
-
-    // 3D 모델 한 번만 생성
-    g_sor->generateTorchSpirit();
-    g_spirit->sorModel.generateTorchSpirit();
-
-    // 정령 초기화
     g_spirit->initSpirits();
 
     glutInit(&argc, argv);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(800, 600);
-    glutCreateWindow("Color Spirit Maze");
+    glutInitWindowSize(1280, 720);
+    glutCreateWindow("Color Spirit Maze - New Spirit System");
 
     glEnable(GL_DEPTH_TEST);
+
+    // 배경색
+    glClearColor(0.05f, 0.05f, 0.08f, 1.0f);
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
@@ -83,6 +77,7 @@ int main(int argc, char** argv) {
     glutMotionFunc(mouseMotionWrapper);
 
     glutIdleFunc([]() {
+        // 카메라 위치를 중심으로 충돌 체크 (y는 안 씀)
         g_spirit->updateSpiritCollision(g_camera->x, g_camera->y, g_camera->z);
         glutPostRedisplay();
         });
