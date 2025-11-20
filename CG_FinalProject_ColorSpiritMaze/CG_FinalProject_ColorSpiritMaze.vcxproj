@@ -129,15 +129,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BodyModel.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Face_Crystal.cpp" />
+    <ClCompile Include="Face_Fire.cpp" />
+    <ClCompile Include="Face_Leaf.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Maze.cpp" />
-    <ClCompile Include="SOR.cpp" />
+    <ClCompile Include="SpiritManager.cpp" />
+    <ClCompile Include="SpiritModel.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BodyModel.h" />
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="Face_Crystal.h" />
+    <ClInclude Include="Face_Fire.h" />
+    <ClInclude Include="Face_Leaf.h" />
     <ClInclude Include="Maze.h" />
-    <ClInclude Include="SOR.h" />
+    <ClInclude Include="SpiritManager.h" />
+    <ClInclude Include="SpiritModel.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

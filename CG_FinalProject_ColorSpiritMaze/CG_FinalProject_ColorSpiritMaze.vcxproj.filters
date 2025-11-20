@@ -24,7 +24,22 @@
     <ClCompile Include="Maze.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="SOR.cpp">
+    <ClCompile Include="SpiritManager.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="BodyModel.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Face_Fire.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Face_Leaf.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="Face_Crystal.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="SpiritModel.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,7 +50,22 @@
     <ClInclude Include="Maze.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="SOR.h">
+    <ClInclude Include="SpiritManager.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="BodyModel.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Face_Fire.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Face_Leaf.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="Face_Crystal.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="SpiritModel.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
