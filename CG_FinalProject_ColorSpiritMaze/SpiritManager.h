@@ -21,5 +21,6 @@ public:
 
     void initSpirits();
     void drawSpirits();
-    void updateSpiritCollision(float px, float py, float pz);
+    // 변경: 속도 아이템 획득 여부를 반환
+    bool updateSpiritCollision(float px, float py, float pz);
 };

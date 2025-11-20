@@ -4,7 +4,7 @@
 #include <algorithm>
 #include <vector>
 
-// stb_image
+// stb_image implementation (한 T.U.에서만 정의되어야 함)
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
@@ -41,7 +41,7 @@ Maze::Maze() {
     {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
     };
 
-    // ����
+    // 복사
     for (int z = 0; z < 30; z++) {
         for (int x = 0; x < 30; x++) {
             mazeData[z][x] = temp[z][x];
@@ -55,11 +55,14 @@ static float clampf(float v, float a, float b) {
     return v;
 }
 
-    for (int z = 0; z < 30; z++) {
-        for (int x = 0; x < 30; x++) {
+void Maze::draw() {
+    // 간단히 벽을 큐브로 렌더링
+    for (int z = 0; z < SIZE; z++) {
+        for (int x = 0; x < SIZE; x++) {
             if (mazeData[z][x] == 1) {
                 glPushMatrix();
-                glTranslatef(x - 15, 0, z - 15);
+                // 큐브의 중심을 맞추기 위해 Y를 0.5로 올림 (땅 위에 놓임)
+                glTranslatef(x - (SIZE / 2), 0.5f, z - (SIZE / 2));
                 glutSolidCube(1.0);
                 glPopMatrix();
             }
