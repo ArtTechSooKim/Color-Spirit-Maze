@@ -1,22 +1,4 @@
-﻿  Camera.cpp
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(16,28): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(16,56): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(17,28): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(18,28): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(18,56): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(52,33): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(53,33): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(58,33): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(59,33): warning C4244: '인수': 'double'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(67,21): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(67,32): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(81,12): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(82,12): warning C4244: '초기화 중': 'float'에서 'int'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(90,13): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(90,24): warning C4244: '=': 'int'에서 'float'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  Maze.cpp
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Maze.cpp(24,42): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Maze.cpp(24,32): warning C4244: '인수': 'int'에서 'GLfloat'(으)로 변환하면서 데이터가 손실될 수 있습니다.
-  main.cpp
+﻿  Maze.cpp
+  Texture.cpp
   코드를 생성하고 있습니다...
   CG_FinalProject_ColorSpiritMaze.vcxproj -> C:\Projects\CG_FinalProject_ColorSpiritMaze\Debug\CG_FinalProject_ColorSpiritMaze.exe

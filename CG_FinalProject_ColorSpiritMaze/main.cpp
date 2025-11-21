@@ -236,6 +236,17 @@ int main(int argc, char** argv) {
     glutCreateWindow("Color Spirit Maze");
 
     glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+
+    glEnable(GL_TEXTURE_2D);
+
+
+    // 텍스처나 기타 초기화
+    g_maze->init();
 
     glutDisplayFunc(display);
     glutReshapeFunc(reshape);
