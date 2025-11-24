@@ -3,11 +3,10 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-
 Texture::Texture() : id(0) {}
 
 Texture::~Texture() {
-    if (id) glDeleteTextures(1, &id);
+    /*if (id) glDeleteTextures(1, &id);*/
 }
 
 bool Texture::loadFromFile(const std::string& path) {

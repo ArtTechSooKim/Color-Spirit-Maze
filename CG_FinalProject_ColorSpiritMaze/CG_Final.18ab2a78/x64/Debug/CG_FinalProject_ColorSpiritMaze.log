@@ -1,9 +1,31 @@
-﻿  Camera.cpp
+﻿  BodyModel.cpp
+  Camera.cpp
+  Face_Crystal.cpp
+  Face_Fire.cpp
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\BodyModel.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\Camera.h(4,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+  (소스 파일 'Camera.cpp'을(를) 컴파일하는 중)
+  
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\Face_Crystal.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\Face_Fire.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+  Face_Leaf.cpp
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\Face_Leaf.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
   main.cpp
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\main.cpp(1,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
   Maze.cpp
-  SOR.cpp
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Camera.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
-C:\Projects\CG_FinalProject_ColorSpiritMaze\main.cpp(1,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
-C:\Projects\CG_FinalProject_ColorSpiritMaze\Maze.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
-C:\Projects\CG_FinalProject_ColorSpiritMaze\SOR.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\Maze.h(3,7): error C2143: 구문 오류: ';'이(가) '<class-head>' 앞에 없습니다.
+  (소스 파일 'Maze.cpp'을(를) 컴파일하는 중)
+  
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\Maze.cpp(1,1): error C4430: 형식 지정자가 없습니다. int로 가정합니다. 참고: C++에서는 기본 int를 지원하지 않습니다.
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\Texture.h(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+  (소스 파일 'Maze.cpp'을(를) 컴파일하는 중)
+  
+  SpiritManager.cpp
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\SpiritManager.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+  SpiritModel.cpp
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\SpiritModel.cpp(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+  Texture.cpp
+C:\Projects\CG_FinalProject_ColorSpiritMazeCCCCC\Texture.h(2,10): error C1083: 포함 파일을 열 수 없습니다. 'GL/glut.h': No such file or directory
+  (소스 파일 'Texture.cpp'을(를) 컴파일하는 중)
+  
   코드를 생성하고 있습니다...

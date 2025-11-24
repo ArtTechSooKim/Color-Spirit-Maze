@@ -1,299 +1,356 @@
 ﻿#include <GL/glut.h>
+#include <cmath>
+#include <string>
+#include <algorithm>
+#include <Windows.h>
+#include "Texture.h"
 #include "Camera.h"
 #include "Maze.h"
 #include "SpiritManager.h"
 
-#include <string>
-#include <sstream>
-#include <iomanip>
-#include <cmath>
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
-// -------- 전역 객체 --------
-Camera* g_camera;
-Maze* g_maze;
-SpiritManager* g_spirit;
+// -------------------------------
+// 전역 객체
+// -------------------------------
+Camera* g_camera = nullptr;
+Maze* g_maze = nullptr;
+SpiritManager* g_spirits = nullptr;
+GLuint g_wallTex = 0;
+GLuint g_floorTex = 0;
+// 카메라 모드 (Camera.cpp에서 extern으로 사용)
+CamMode g_camMode = PLAYER_MODE;
 
 // 게임 상태
-enum GameState { Menu, Playing, Ended };
-GameState g_state = Menu;
+enum GameState { MENU, PLAYING };
+GameState g_state = MENU;
 
-// RGB 카운트
-int g_countR = 0;
-int g_countG = 0;
-int g_countB = 0;
+// 시간
+int   g_lastMs = 0;
+float g_delta = 0.0f;
 
-// 이동속도
-float g_baseSpeed = 0.2f;
-float g_moveSpeed = g_baseSpeed;
+// 스프린트 관련
+bool  wPressed = false;
+float baseSpeed = 0.12f;
+float sprintSpeed = 0.28f;
 
-// 버프
-float g_speedBuffTime = 0.0f;
+// 마우스 중앙 고정용
+int winW = 1280;
+int winH = 720;
 
-// 타이머
-float g_timeRemaining = 120.0f;
-int g_lastTimeMs = 0;
+// -----------------------------
+// F1: 디버그 카메라 토글
+// -----------------------------
+void specialDown(int key, int, int)
+{
+    if (key == GLUT_KEY_F1)
+    {
+        // 모드 전환
+        g_camMode = (g_camMode == PLAYER_MODE ? DEBUG_MODE : PLAYER_MODE);
 
+        // Debug Mode에 들어간 순간 카메라 위치/시야 강제 설정
+        if (g_camMode == DEBUG_MODE)
+        {
+            // 🔥 Maze 전체를 내려다보는 오버뷰 위치
+            g_camera->x = 0.0f;
+            g_camera->y = 10.0f;
+            g_camera->z = 0.0f;
 
-// -------- 마우스 Wrapper --------
-void mouseButtonWrapper(int btn, int state, int x, int y) {
-    if (g_state == Menu && btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+            // 🔥 아래(-y)를 바라보도록 pitch 설정
+            g_camera->pitch = -89.0f;
 
-        int w = glutGet(GLUT_WINDOW_WIDTH);
-        int h = glutGet(GLUT_WINDOW_HEIGHT);
-
-        int btnW = 240;
-        int btnH = 64;
-        int btnX = w / 2 - btnW / 2;
-        int btnY = h / 2 - btnH / 2;
-
-        int oy = h - y;
-        int ox = x;
-
-        if (ox >= btnX && ox <= btnX + btnW && oy >= btnY && oy <= btnY + btnH) {
-            g_state = Playing;
-            g_timeRemaining = 120.0f;
-            g_moveSpeed = g_baseSpeed;
-            g_speedBuffTime = 0.0f;
-            g_countR = g_countG = g_countB = 0;
-
-            g_lastTimeMs = glutGet(GLUT_ELAPSED_TIME);
+            // 🔥 yaw는 아무 방향이나 OK (0도면 -Z 방향 바라봄)
+            g_camera->yaw = 0.0f;
         }
-        return;
     }
-
-    if (g_state != Menu) g_camera->mouseButton(btn, state, x, y);
 }
 
-void mouseMotionWrapper(int x, int y) {
-    if (g_state != Menu) g_camera->mouseMotion(x, y);
-}
-
-
-// -------- Overlay Text --------
-void drawText(const std::string& s) {
-    for (char c : s) {
+// -----------------------------
+// 간단 텍스트 출력
+// -----------------------------
+void drawText(float x, float y, const std::string& s)
+{
+    glRasterPos2f(x, y);
+    for (char c : s)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
-    }
 }
 
-
-// -------- Overlay Rendering --------
-void drawOverlay() {
+// -----------------------------
+// 메뉴 화면
+// -----------------------------
+void drawMenu()
+{
     int w = glutGet(GLUT_WINDOW_WIDTH);
     int h = glutGet(GLUT_WINDOW_HEIGHT);
+
+    glDisable(GL_DEPTH_TEST);
 
     glMatrixMode(GL_PROJECTION);
     glPushMatrix();
     glLoadIdentity();
-
     gluOrtho2D(0, w, 0, h);
 
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
 
-    glDisable(GL_DEPTH_TEST);
-
-    // RGB 카운트
-    std::ostringstream ss;
-    ss << "R: " << g_countR << "  G: " << g_countG << "  B: " << g_countB;
+    std::string msg = "CLICK TO START";
     glColor3f(1, 1, 1);
-    glRasterPos2i(10, h - 20);
-    drawText(ss.str());
+    int textW = (int)msg.length() * 10;
 
-    // 타이머
-    ss.str(""); ss.clear();
-    ss << "Time: " << (int)std::ceil(g_timeRemaining) << "s";
-    glRasterPos2i(10, h - 40);
-    drawText(ss.str());
-
-    // 버프가 있을 때만 표시
-    if (g_speedBuffTime > 0.0f) {
-        ss.str(""); ss.clear();
-        ss << "Speed Buff: " << std::fixed << std::setprecision(1) << g_speedBuffTime << "s";
-        glRasterPos2i(10, h - 60);
-        drawText(ss.str());
-    }
-
-    // ----- MENU START 버튼 -----
-    if (g_state == Menu) {
-        int btnW = 240;
-        int btnH = 64;
-        int btnX = w / 2 - btnW / 2;
-        int btnY = h / 2 - btnH / 2;
-
-        glColor3f(0.1f, 0.1f, 0.35f);
-        glBegin(GL_QUADS);
-        glVertex2i(btnX, btnY);
-        glVertex2i(btnX + btnW, btnY);
-        glVertex2i(btnX + btnW, btnY + btnH);
-        glVertex2i(btnX, btnY + btnH);
-        glEnd();
-
-        glColor3f(1, 1, 1);
-        std::string label = "CLICK TO START";
-        int textW = glutBitmapLength(GLUT_BITMAP_HELVETICA_18, (const unsigned char*)label.c_str());
-        glRasterPos2i(btnX + (btnW - textW) / 2, btnY + btnH / 2 + 6);
-        drawText(label);
-    }
-
-    // ----- GAME OVER 화면 -----
-    if (g_state == Ended) {
-        int total = g_countR + g_countG + g_countB;
-        std::string grade = (total >= 3) ? "A" : (total == 2 ? "B" : (total == 1 ? "C" : "F"));
-
-        std::string title = "GAME OVER";
-        std::string totalStr = "Total: " + std::to_string(total);
-        std::string gradeStr = "Grade: " + grade;
-
-        int cx = w / 2;
-        int cy = h / 2;
-
-        glColor3f(1, 1, 0);
-        glRasterPos2i(cx - glutBitmapLength(GLUT_BITMAP_HELVETICA_18, (const unsigned char*)title.c_str()) / 2, cy + 20);
-        drawText(title);
-
-        glColor3f(1, 1, 1);
-        glRasterPos2i(cx - glutBitmapLength(GLUT_BITMAP_HELVETICA_18, (const unsigned char*)totalStr.c_str()) / 2, cy);
-        drawText(totalStr);
-
-        glColor3f(0.2f, 1, 0.2f);
-        glRasterPos2i(cx - glutBitmapLength(GLUT_BITMAP_HELVETICA_18, (const unsigned char*)gradeStr.c_str()) / 2, cy - 20);
-        drawText(gradeStr);
-    }
-
-    glEnable(GL_DEPTH_TEST);
+    glRasterPos2i(w / 2 - textW / 2, h / 2);
+    for (char c : msg)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
 
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
     glPopMatrix();
+
+    glEnable(GL_DEPTH_TEST);
 }
 
-
-// -------- Display --------
-void display() {
+// -----------------------------
+// Display
+// -----------------------------
+void display()
+{
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+    // ---------------------------
+    // ⭐ 1) Projection 설정 추가
+    // ---------------------------
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
+    gluPerspective(
+        70.0f,                 // FOV (시야각)
+        (float)winW / winH,    // 종횡비
+        0.1f,                  // Near plane
+        200.0f                 // Far plane (Maze 전체 보이도록 크게 설정)
+    );
+
+    // 이제 모델뷰로 변경
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    // ---------------------------
+    // MENU 처리
+    // ---------------------------
+    if (g_state == MENU) {
+        drawMenu();
+        glutSwapBuffers();
+        return;
+    }
+
+    // ---------------------------
+    // ⭐ 2) FPS 카메라 적용
+    // ---------------------------
     g_camera->apply();
 
+    // Maze + Spirits
     g_maze->draw();
-    g_spirit->drawSpirits();
+    g_spirits->drawSpirits();
 
-    drawOverlay();
+    // ---------------------------
+    // UI overlay (2D 모드)
+    // ---------------------------
+
+    glDisable(GL_TEXTURE_2D);
+    glDisable(GL_DEPTH_TEST);
+
+    glMatrixMode(GL_PROJECTION);
+    glPushMatrix();
+    glLoadIdentity();
+    gluOrtho2D(0, winW, 0, winH);
+
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glLoadIdentity();
+
+    glColor3f(1, 1, 1);
+
+    drawText(10, winH - 20, "Time: " + std::to_string((int)g_camera->playTime) + "s");
+    drawText(10, winH - 50,
+        "R: " + std::to_string(g_spirits->Rcount) +
+        "  G: " + std::to_string(g_spirits->Gcount) +
+        "  B: " + std::to_string(g_spirits->Bcount)
+    );
+
+    drawText(winW - 200, 20, "WASD: Move");
+    drawText(winW - 200, 40, "Mouse: Look");
+    drawText(winW - 200, 60, "Space: Jump");
+    drawText(winW - 200, 80, "F1: Debug Cam");
+
+    glMatrixMode(GL_MODELVIEW);
+    glPopMatrix();
+    glMatrixMode(GL_PROJECTION);
+    glPopMatrix();
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_TEXTURE_2D);
 
     glutSwapBuffers();
 }
 
+// -----------------------------
+// 마우스 클릭
+// -----------------------------
+void mouseButton(int btn, int state, int x, int y)
+{
+    // 메뉴 상태에서 클릭하면 게임 시작
+    if (g_state == MENU && btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        g_state = PLAYING;
 
-// -------- Reshape --------
-void reshape(int w, int h) {
-    if (h == 0) h = 1;
-    glViewport(0, 0, w, h);
+        // 커서 숨기기
+        glutSetCursor(GLUT_CURSOR_NONE);
 
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluPerspective(60, (float)w / h, 1.0, 500.0);
+        // 마우스 중앙으로 이동
+        int cx = winW / 2;
+        int cy = winH / 2;
+        glutWarpPointer(cx, cy);
+        g_camera->lastX = (float)cx;
+        g_camera->lastY = (float)cy;
 
-    glMatrixMode(GL_MODELVIEW);
+        return;
+    }
+
+    // 플레이 중일 때만 카메라 마우스 버튼 처리
+    if (g_state == PLAYING)
+        g_camera->mouseButton(btn, state, x, y);
 }
 
+// -----------------------------
+// 마우스 이동
+// -----------------------------
+void mouseMotion(int x, int y)
+{
+    if (g_state != PLAYING) return;
 
-// -------- Keyboard --------
-void keyboard(unsigned char key, int x, int y) {
-    if (key == 27) exit(0);
+    int cx = winW / 2;
+    int cy = winH / 2;
 
-    if (g_state != Playing) return;
+    // warpPointer로 인해 들어온 이벤트면 무시
+    if (x == cx && y == cy)
+        return;
 
-    if (key == 'w') g_camera->moveForward(g_moveSpeed);
-    if (key == 's') g_camera->moveBackward(g_moveSpeed);
-    if (key == 'a') g_camera->moveLeft(g_moveSpeed);
-    if (key == 'd') g_camera->moveRight(g_moveSpeed);
+    // 상대 이동량 계산 (절대좌표 X)
+    int dx = x - cx;
+    int dy = cy - y;
+
+    g_camera->handleMouseLook(dx, dy);
+
+    // 다시 중앙으로
+    glutWarpPointer(cx, cy);
+}
+
+// -----------------------------
+// 키보드
+// -----------------------------
+void keyDown(unsigned char key, int, int)
+{
+    if (g_state != PLAYING) return;
+
+    if (key == 'w') wPressed = true;
+    if (key == 's') g_camera->moveBackward(baseSpeed);
+    if (key == 'a') g_camera->moveLeft(baseSpeed);
+    if (key == 'd') g_camera->moveRight(baseSpeed);
+
+    if (key == ' ')
+        g_camera->jump();
+
+    // ESC → 메뉴로 돌아가기
+    if (key == 27) {
+        g_state = MENU;
+        glutSetCursor(GLUT_CURSOR_LEFT_ARROW);
+    }
+}
+
+void keyUp(unsigned char key, int, int)
+{
+    if (key == 'w') wPressed = false;
+}
+
+// -----------------------------
+// Idle / Update
+// -----------------------------
+void update()
+{
+    int now = glutGet(GLUT_ELAPSED_TIME);
+    g_delta = (now - g_lastMs) / 1000.0f;
+    g_lastMs = now;
+
+    if (g_state == PLAYING) {
+        g_camera->playTime += g_delta;
+
+        // W를 누르고 있으면 스프린트 처리 + 앞으로 이동
+        if (wPressed) {
+            float speed = g_camera->updateSprint(g_delta, baseSpeed, sprintSpeed);
+            g_camera->sprinting = true;
+            g_camera->moveForward(speed);
+        }
+        else {
+            // W를 떼면 sprinting false, 스태미나 회복만 진행
+            g_camera->sprinting = false;
+            g_camera->updateSprint(g_delta, baseSpeed, sprintSpeed);
+        }
+    }
 
     glutPostRedisplay();
 }
 
-
-// -------- main --------
-int main(int argc, char** argv) {
-    g_camera = new Camera();
-    g_maze = new Maze();
-    g_spirit = new SpiritManager();
-
-    g_spirit->maze = g_maze;
-    g_spirit->initSpirits();
-
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutInitWindowSize(1280, 720);
-    glutCreateWindow("Color Spirit Maze");
-
+// -----------------------------
+// GL 초기화
+// -----------------------------
+void initGL()
+{
     glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
-
     glEnable(GL_TEXTURE_2D);
 
+    // Texture 객체 생성
+    Texture wallTexObj;
+    Texture floorTexObj;
 
-    // 텍스처나 기타 초기화
+    // 파일 불러오기 (png/jpg 가능)
+    wallTexObj.loadFromFile("Debug/assets/wall_texture.png");
+    floorTexObj.loadFromFile("Debug/assets/floor_texture.png");
+
+    // 전역 변수에 ID 저장
+    g_wallTex = wallTexObj.getID();
+    g_floorTex = floorTexObj.getID();
+
+    // 기존 Init들
+    g_camera = new Camera();
+    g_maze = new Maze();
+    g_spirits = new SpiritManager();
+
     g_maze->init();
+    g_camera->maze = g_maze;
+    g_spirits->maze = g_maze;
+    g_spirits->initSpirits();
+
+    g_camera->setPosition(-13.5f, 1.5f, -13.5f);
+}
+
+// -----------------------------
+// main
+// -----------------------------
+int main(int argc, char** argv)
+{
+    glutInit(&argc, argv);
+    glutInitWindowSize(winW, winH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutCreateWindow("Spirit Maze FPS");
+
+    initGL();
 
     glutDisplayFunc(display);
-    glutReshapeFunc(reshape);
-    glutKeyboardFunc(keyboard);
-    glutMouseFunc(mouseButtonWrapper);
-    glutMotionFunc(mouseMotionWrapper);
+    glutKeyboardFunc(keyDown);
+    glutKeyboardUpFunc(keyUp);
+    glutMouseFunc(mouseButton);
+    glutMotionFunc(mouseMotion);
+    glutPassiveMotionFunc(mouseMotion);
+    glutIdleFunc(update);
+    glutSpecialFunc(specialDown);
 
-    g_lastTimeMs = glutGet(GLUT_ELAPSED_TIME);
-
-    glutIdleFunc([]() {
-        if (g_state != Playing) {
-            glutPostRedisplay();
-            return;
-        }
-
-        int curr = glutGet(GLUT_ELAPSED_TIME);
-        float delta = (curr - g_lastTimeMs) / 1000.0f;
-        g_lastTimeMs = curr;
-
-        // 충돌체크 (녹색이면 true)
-        bool gotSpeed = g_spirit->updateSpiritCollision(g_camera->x, g_camera->y, g_camera->z);
-
-        g_countR = g_spirit->Rcount;
-        g_countG = g_spirit->Gcount;
-        g_countB = g_spirit->Bcount;
-
-        g_timeRemaining -= delta;
-        if (g_timeRemaining <= 0.0f) {
-            g_timeRemaining = 0.0f;
-            g_state = Ended;
-        }
-
-        if (gotSpeed) {
-            g_speedBuffTime = 5.0f;
-            g_moveSpeed = g_baseSpeed * 1.8f;
-        }
-
-        if (g_speedBuffTime > 0.0f) {
-            g_speedBuffTime -= delta;
-            if (g_speedBuffTime <= 0.0f) {
-                g_speedBuffTime = 0.0f;
-                g_moveSpeed = g_baseSpeed;
-            }
-        }
-
-        glutPostRedisplay();
-        });
+    g_lastMs = glutGet(GLUT_ELAPSED_TIME);
 
     glutMainLoop();
     return 0;

@@ -18,13 +18,11 @@ void SpiritManager::initSpirits() {
         Spirit s;
         s.x = pos[i].first;
         s.z = pos[i].second;
-        s.y = 0;
-        s.yOffset = 0.2f;
 
-        // R, G, B 반복
-        if (i % 3 == 0) s.type = RED_SPIRIT;
-        else if (i % 3 == 1) s.type = GREEN_SPIRIT;
-        else                s.type = BLUE_SPIRIT;
+        // R → G → B 반복
+        if (i % 3 == 0) s.type = SpiritType::RED_SPIRIT;
+        else if (i % 3 == 1) s.type = SpiritType::GREEN_SPIRIT;
+        else                s.type = SpiritType::BLUE_SPIRIT;
 
         spirits.push_back(s);
     }
@@ -46,7 +44,6 @@ void SpiritManager::drawSpirits() {
     }
 }
 
-// 녹색정령 수집 시 true 반환
 bool SpiritManager::updateSpiritCollision(float px, float py, float pz) {
     bool gotSpeed = false;
 
@@ -60,12 +57,12 @@ bool SpiritManager::updateSpiritCollision(float px, float py, float pz) {
         if (dist < 0.8f) {
             s.collected = true;
 
-            if (s.type == RED_SPIRIT)   Rcount++;
-            if (s.type == GREEN_SPIRIT) {
+            if (s.type == SpiritType::RED_SPIRIT)   Rcount++;
+            if (s.type == SpiritType::GREEN_SPIRIT) {
                 Gcount++;
                 gotSpeed = true;
             }
-            if (s.type == BLUE_SPIRIT)  Bcount++;
+            if (s.type == SpiritType::BLUE_SPIRIT)  Bcount++;
         }
     }
 

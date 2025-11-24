@@ -3,11 +3,12 @@
 #include "Maze.h"
 #include "SpiritModel.h"
 
-// 정령 타입, 위치 구조
+// 정령 데이터
 struct Spirit {
-    float x, y, z;
+    float x, z;
+    float y = 0.0f;
     float yOffset = 0.2f;
-    SpiritType type;
+    SpiritType type;    // SpiritModel.h에서 정의된 enum 사용
     bool collected = false;
 };
 
@@ -18,7 +19,7 @@ public:
 
     SpiritModel model;
 
-    // RGB 카운트 (팀원 기능 유지)
+    // RGB 카운트
     int Rcount = 0;
     int Gcount = 0;
     int Bcount = 0;
@@ -26,6 +27,5 @@ public:
     void initSpirits();
     void drawSpirits();
 
-    // 초록정령 수집 시 true 반환 (속도 버프용)
     bool updateSpiritCollision(float px, float py, float pz);
 };
