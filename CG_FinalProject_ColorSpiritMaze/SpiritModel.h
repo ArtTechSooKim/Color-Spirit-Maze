@@ -8,7 +8,8 @@
 enum SpiritType {
     RED_SPIRIT,
     GREEN_SPIRIT,
-    BLUE_SPIRIT
+    BLUE_SPIRIT,
+    MIXED_SPIRIT
 };
 
 class SpiritModel {
@@ -20,4 +21,7 @@ public:
 
     void init();
     void draw(SpiritType type);
+
+    void drawBody();
+    void drawFace(SpiritType type);
 };

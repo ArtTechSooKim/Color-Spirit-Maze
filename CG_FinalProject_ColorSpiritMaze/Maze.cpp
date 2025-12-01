@@ -143,6 +143,19 @@ void Maze::draw()
             glTexCoord2f(1, 0); glVertex3f(cx + w, 0, cz + w);
             glTexCoord2f(1, 1); glVertex3f(cx + w, h, cz + w);
             glTexCoord2f(0, 1); glVertex3f(cx + w, h, cz - w);
+            // ---------------- TOP ----------------
+            glNormal3f(0, 1, 0);
+            glTexCoord2f(0, 0); glVertex3f(cx - w, h, cz - w);
+            glTexCoord2f(1, 0); glVertex3f(cx + w, h, cz - w);
+            glTexCoord2f(1, 1); glVertex3f(cx + w, h, cz + w);
+            glTexCoord2f(0, 1); glVertex3f(cx - w, h, cz + w);
+            // ---------------- BOOTOM ----------------
+            glNormal3f(0, -1, 0);
+            glTexCoord2f(0, 0); glVertex3f(cx - w, 0, cz - w);
+            glTexCoord2f(1, 0); glVertex3f(cx + w, 0, cz - w);
+            glTexCoord2f(1, 1); glVertex3f(cx + w, 0, cz + w);
+            glTexCoord2f(0, 1); glVertex3f(cx - w, 0, cz + w);
+
 
             glEnd();
         }
@@ -151,11 +164,39 @@ void Maze::draw()
 
 bool Maze::checkCollision(float px, float pz, float radius)
 {
+    // 플레이어가 위치한 중심 타일
     int tx = int(px + 30);
     int tz = int(pz + 30);
 
+    // 범위 밖이면 충돌
     if (tx < 0 || tx >= 60 || tz < 0 || tz >= 60)
         return true;
 
-    return (map[tz][tx] == 1);
+    float half = 0.5f; // 벽 반두께 (Maze::draw에서 쓰는 w와 동일)
+
+    // 플레이어 주변 3x3 타일 검사
+    for (int z = tz - 1; z <= tz + 1; ++z) {
+        if (z < 0 || z >= 60) continue;
+
+        for (int x = tx - 1; x <= tx + 1; ++x) {
+            if (x < 0 || x >= 60) continue;
+
+            if (map[z][x] != 1) continue; // 벽이 아니면 패스
+
+            // 이 벽 타일의 월드 좌표 중심
+            float cx = x - 30 + 0.5f;
+            float cz = z - 30 + 0.5f;
+
+            // XZ 평면에서 AABB vs 원(플레이어 반경) 겹침 체크
+            bool overlapX = (px > cx - half - radius) && (px < cx + half + radius);
+            bool overlapZ = (pz > cz - half - radius) && (pz < cz + half + radius);
+
+            if (overlapX && overlapZ) {
+                return true; // 이 벽과 충돌
+            }
+        }
+    }
+
+    // 주변 3x3 안에 겹치는 벽 없음
+    return false;
 }

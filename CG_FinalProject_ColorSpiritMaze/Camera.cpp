@@ -21,7 +21,7 @@ Camera::Camera() {
     pitch = 0.0f;
 
     lastX = 640.0f;
-    lastY = 360.0f;
+    lastY = 640.0f;
     firstMouse = true;
 
     yVelocity = 0.0f;

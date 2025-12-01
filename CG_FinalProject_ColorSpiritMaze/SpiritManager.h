@@ -5,11 +5,21 @@
 
 // 정령 데이터
 struct Spirit {
-    float x, z;
+    float x = 0, z = 0;
     float y = 0.0f;
-    float yOffset = 0.2f;
-    SpiritType type;    // SpiritModel.h에서 정의된 enum 사용
+    float yOffset = 1.0f;
+    SpiritType type;
     bool collected = false;
+
+    // 혼합 정령용
+    bool mixR = false;
+    bool mixG = false;
+    bool mixB = false;
+
+    // 최종 색상
+    float mixColorR = 1.0f;
+    float mixColorG = 1.0f;
+    float mixColorB = 1.0f;
 };
 
 class SpiritManager {
@@ -24,8 +34,14 @@ public:
     int Gcount = 0;
     int Bcount = 0;
 
+    // 최종 결과 정령
+    bool showResultSpirit = false;
+    Spirit resultSpirit;
+
     void initSpirits();
     void drawSpirits();
-
     bool updateSpiritCollision(float px, float py, float pz);
+
+    // TimeUp 결과 정령 생성
+    void spawnResultSpirit(float px, float py, float pz, float dirX, float dirZ);
 };

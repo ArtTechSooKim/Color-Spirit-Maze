@@ -8,6 +8,10 @@
 #include "Maze.h"
 #include "SpiritManager.h"
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 // -------------------------------
 // 전역 객체
 // -------------------------------
@@ -23,14 +27,26 @@ CamMode g_camMode = PLAYER_MODE;
 enum GameState { MENU, PLAYING };
 GameState g_state = MENU;
 
+// 튜토표시시간
+bool firstStart = true;
+float tutorialTimer = 0.0f;
+
 // 시간
 int   g_lastMs = 0;
 float g_delta = 0.0f;
 
+// 게임 타이머
+float gameTimer = 180.0f;   // 3분(초)
+bool timeUp = false;
+float resultMsgTimer = 0.0f;
+
 // 스프린트 관련
 bool  wPressed = false;
+bool  aPressed = false;
+bool  sPressed = false;
+bool  dPressed = false;
 float baseSpeed = 0.12f;
-float sprintSpeed = 0.28f;
+float sprintSpeed = 0.12f;
 
 // 마우스 중앙 고정용
 int winW = 1280;
@@ -72,6 +88,20 @@ void drawText(float x, float y, const std::string& s)
     for (char c : s)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, c);
 }
+
+void drawBigText(float x, float y, const std::string& s, float scale = 0.2f)
+{
+    glPushMatrix();
+    glTranslatef(x, y, 0);
+    glScalef(scale, scale, scale);   // 🔥 글자 크기 배율 조절
+    glLineWidth(2.0f);               // 글자 두께 조금 증가
+
+    for (char c : s)
+        glutStrokeCharacter(GLUT_STROKE_ROMAN, c);
+
+    glPopMatrix();
+}
+
 
 // -----------------------------
 // 메뉴 화면
@@ -130,6 +160,40 @@ void display()
     // 이제 모델뷰로 변경
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
+    // ---------------------------
+    // 튜토리얼 표시
+    // ---------------------------
+    if (g_state == 2) {
+
+        glDisable(GL_DEPTH_TEST);
+        glMatrixMode(GL_PROJECTION);
+        glPushMatrix();
+        glLoadIdentity();
+        gluOrtho2D(0, winW, 0, winH);
+        glMatrixMode(GL_MODELVIEW);
+        glPushMatrix();
+        glLoadIdentity();
+
+        glColor3f(1, 1, 1);
+
+        std::string msg;
+
+        if (tutorialTimer < 2.0f)        msg = "Make Your Own Color Spirit!";
+        else if (tutorialTimer < 4.0f)   msg = "Find RGB Spirits to make it.";
+        else if (tutorialTimer < 5.0f)   msg = "      Ready?            ";
+        else                             msg = "       GO!            ";
+
+        int textW = msg.length() * 10;
+        drawBigText(winW / 2 - 150, winH / 2, msg, 0.2f);
+
+        glPopMatrix();
+        glMatrixMode(GL_PROJECTION);
+        glPopMatrix();
+        glEnable(GL_DEPTH_TEST);
+
+        glutSwapBuffers();
+        return;
+    }
 
     // ---------------------------
     // MENU 처리
@@ -167,11 +231,11 @@ void display()
 
     glColor3f(1, 1, 1);
 
-    // 🔵 좌측 상단: 시간 + RGB 카운트
-    drawText(10, winH - 20, "Time: " + std::to_string((int)g_camera->playTime) + "s");
-
+    // 🔵 좌측 상단: 제한시간 + RGB 카운트
+    drawText(10, winH - 20,
+        "Time Left: " + std::to_string((int)gameTimer) + "s");
     drawText(10, winH - 50,
-        "R: " + std::to_string(g_spirits->Rcount) +
+        "  R: " + std::to_string(g_spirits->Rcount) +
         "  G: " + std::to_string(g_spirits->Gcount) +
         "  B: " + std::to_string(g_spirits->Bcount)
     );
@@ -192,6 +256,13 @@ void display()
     drawText(winW - 200, 60, "Space: Jump");
     drawText(winW - 200, 80, "F1: Debug Cam");
 
+    if (resultMsgTimer > 0.0f) {
+        drawBigText(winW / 2, winH - 50, "Congratulation! You Made Spirit!", 0.2f);
+    }
+    resultMsgTimer -= g_delta;
+    if (resultMsgTimer < 0) resultMsgTimer = 0;
+
+
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
     glMatrixMode(GL_PROJECTION);
@@ -210,6 +281,13 @@ void mouseButton(int btn, int state, int x, int y)
 {
     // 메뉴 상태에서 클릭하면 게임 시작
     if (g_state == MENU && btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+        // 처음 시작일 때만 튜토리얼 실행
+        if (firstStart&& gameTimer >= 179.0f) {
+            tutorialTimer = 0.0f;
+            firstStart = false;
+            g_state = GameState(2);   // 튜토리얼 전용 상태
+            return;
+        }
         g_state = PLAYING;
 
         // 커서 숨기기
@@ -262,9 +340,9 @@ void keyDown(unsigned char key, int, int)
     if (g_state != PLAYING) return;
 
     if (key == 'w') wPressed = true;
-    if (key == 's') g_camera->moveBackward(baseSpeed);
-    if (key == 'a') g_camera->moveLeft(baseSpeed);
-    if (key == 'd') g_camera->moveRight(baseSpeed);
+    if (key == 'a') aPressed = true;
+    if (key == 's') sPressed = true;
+    if (key == 'd') dPressed = true;
 
     if (key == ' ')
         g_camera->jump();
@@ -279,6 +357,9 @@ void keyDown(unsigned char key, int, int)
 void keyUp(unsigned char key, int, int)
 {
     if (key == 'w') wPressed = false;
+    if (key == 'a') aPressed = false;
+    if (key == 's') sPressed = false;
+    if (key == 'd') dPressed = false;
 }
 
 // -----------------------------
@@ -289,10 +370,48 @@ void update()
     int now = glutGet(GLUT_ELAPSED_TIME);
     g_delta = (now - g_lastMs) / 1000.0f;
     g_lastMs = now;
+    // ------------------
+   // 1) MENU 상태
+   // ------------------
+    if (g_state == MENU) {
+        // 시간 멈춤 (아무것도 하지 않음)
+        glutPostRedisplay();
+        return;
+    }
+
+    // ----------------------------
+    // 튜토리얼 상태 처리
+    // ----------------------------
+    if (g_state == 2) {
+        tutorialTimer += g_delta;
+
+        // 시간 순서대로 문구가 바뀜
+        if (tutorialTimer < 2.0f) { /* 2초간 메시지1 */ }
+        else if (tutorialTimer < 4.0f) { /* 메시지2 */ }
+        else if (tutorialTimer < 5.0f) { /* 메시지3 */ }
+        else if (tutorialTimer < 6.0f) { /* 메시지4 */ }
+        else 
+        // 튜토리얼이 끝나면 PLAYING으로 전환
+        if (tutorialTimer >= 8.0f) {
+            g_state = PLAYING;
+
+            glutSetCursor(GLUT_CURSOR_NONE);
+            int cx = winW / 2;
+            int cy = winH / 2;
+            glutWarpPointer(cx, cy);
+            g_camera->lastX = (float)cx;
+            g_camera->lastY = (float)cy;
+        }
+
+
+        glutPostRedisplay();
+        return; // 튜토리얼 중에는 게임 업데이트 멈춤
+    }
 
     if (g_state == PLAYING) {
         g_camera->playTime += g_delta;
-
+        gameTimer -= g_delta;
+        if (gameTimer < 0) gameTimer = 0;
         // W를 누르고 있으면 스프린트 처리 + 앞으로 이동
         if (wPressed) {
             float speed = g_camera->updateSprint(g_delta, baseSpeed, sprintSpeed);
@@ -304,9 +423,63 @@ void update()
             g_camera->sprinting = false;
             g_camera->updateSprint(g_delta, baseSpeed, sprintSpeed);
         }
+        if (aPressed) {
+            g_camera->moveLeft(baseSpeed);
+        }
+
+        // --- S: 뒤 ---
+        if (sPressed) {
+            g_camera->moveBackward(baseSpeed);
+        }
+
+        // --- D: 우 ---
+        if (dPressed) {
+            g_camera->moveRight(baseSpeed);
+        }
+    }
+    if (g_camMode == PLAYER_MODE) {
+        bool gotSpeed = g_spirits->updateSpiritCollision(
+            g_camera->x,
+            g_camera->y,
+            g_camera->z
+        );
+
+    }
+    glutPostRedisplay();
+    // ▼▼ 제한 시간 감소 ▼▼
+    if (!timeUp) {
+        if (gameTimer <= 0) {
+            gameTimer = 0;
+            timeUp = true;
+        }
+    }
+    // ▼▼ 타임업 이벤트 처리 ▼▼
+    if (timeUp) {
+        // 카메라를 중앙으로 이동
+        g_camera->setPosition(0.0f, 1.5f, 0.0f);
+        // 카메라 방향
+        float dx = cosf(g_camera->pitch * M_PI / 180) * cosf(g_camera->yaw * M_PI / 180);
+        float dz = cosf(g_camera->pitch * M_PI / 180) * sinf(g_camera->yaw * M_PI / 180);
+        // 결과 정령 생성
+        g_spirits->showResultSpirit = true;
+        g_spirits->spawnResultSpirit(g_camera->x, g_camera->y, g_camera->z, dx, dz);
+
+        // UI 표시 2초
+        resultMsgTimer = 2.0f;
+
+        // RGB 초기화
+        g_spirits->Rcount = 0;
+        g_spirits->Gcount = 0;
+        g_spirits->Bcount = 0;
+
+        // 시간 초기화(다시 3분)
+        gameTimer = 180.0f;
+        timeUp = false;
+
+        // 더 진행되면 안 되니까 return
+        return;
     }
 
-    glutPostRedisplay();
 }
 
 // -----------------------------
