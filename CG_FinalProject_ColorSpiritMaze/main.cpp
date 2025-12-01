@@ -167,13 +167,26 @@ void display()
 
     glColor3f(1, 1, 1);
 
+    // 🔵 좌측 상단: 시간 + RGB 카운트
     drawText(10, winH - 20, "Time: " + std::to_string((int)g_camera->playTime) + "s");
+
     drawText(10, winH - 50,
         "R: " + std::to_string(g_spirits->Rcount) +
         "  G: " + std::to_string(g_spirits->Gcount) +
         "  B: " + std::to_string(g_spirits->Bcount)
     );
 
+    // 🔵 우측 상단: 플레이어 좌표 표시 추가
+    {
+        char pos[128];
+        sprintf_s(pos, sizeof(pos),
+            "X: %.2f  Y: %.2f  Z: %.2f",
+            g_camera->x, g_camera->y, g_camera->z);
+
+        drawText(winW - 260, winH - 20, pos);
+    }
+
+    // 🔵 우측 하단: 조작 방법
     drawText(winW - 200, 20, "WASD: Move");
     drawText(winW - 200, 40, "Mouse: Look");
     drawText(winW - 200, 60, "Space: Jump");
@@ -326,7 +339,7 @@ void initGL()
     g_spirits->maze = g_maze;
     g_spirits->initSpirits();
 
-    g_camera->setPosition(-13.5f, 1.5f, -13.5f);
+    g_camera->setPosition(0.0f, 3.5f, 0.0f);
 }
 
 // -----------------------------
