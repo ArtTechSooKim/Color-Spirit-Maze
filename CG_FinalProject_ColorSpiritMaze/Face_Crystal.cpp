@@ -1,18 +1,25 @@
 #include "Face_Crystal.h"
 #include <GL/glut.h>
 
-void FaceCrystal::draw() {
-    glColor3f(0.4f, 0.7f, 1.0f);
+extern bool g_isMixedFace;
+extern float g_mixedR, g_mixedG, g_mixedB;
 
-    // 위쪽 뾰족
+void FaceCrystal::draw() {
+
+    if (g_isMixedFace)
+        glColor3f(g_mixedR, g_mixedG, g_mixedB);
+    else
+        glColor3f(0.0f, 0.0f, 1.0f);
+
+    // 위쪽
     glPushMatrix();
-    glRotatef(-90, 1, 0, 0);  // Z→Y 방향으로 바로 세우기
+    glRotatef(-90, 1, 0, 0);
     glutSolidCone(0.5, 0.8, 20, 20);
     glPopMatrix();
 
-    // 아래쪽 뾰족
+    // 아래쪽
     glPushMatrix();
-    glRotatef(90, 1, 0, 0);   // 반대 방향
+    glRotatef(90, 1, 0, 0);
     glutSolidCone(0.5, 0.8, 20, 20);
     glPopMatrix();
 }

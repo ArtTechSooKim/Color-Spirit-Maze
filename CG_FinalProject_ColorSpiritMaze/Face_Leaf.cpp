@@ -1,12 +1,18 @@
 #include "Face_Leaf.h"
 #include <GL/glut.h>
 
+// SpiritModel에서 설정해주는 전역 상태
+extern bool g_isMixedFace;
+extern float g_mixedR, g_mixedG, g_mixedB;
 void FaceLeaf::init() {
-    // 현재 별도 초기화 필요 없음
+    // 필요없음
 }
-
 void FaceLeaf::draw() {
-    glColor3f(0.1f, 1.0f, 0.3f);
+
+    if (g_isMixedFace)
+        glColor3f(g_mixedR, g_mixedG, g_mixedB);
+    else
+        glColor3f(0.0f, 1.0f, 0.0f);
 
     // 왼쪽 잎
     glPushMatrix();
@@ -24,10 +30,10 @@ void FaceLeaf::draw() {
     glutSolidSphere(1.0, 16, 16);
     glPopMatrix();
 
-    // 작은 새싹 머리
+    // 머리
     glPushMatrix();
-    glColor3f(0.3f, 0.9f, 0.2f);
-    glTranslatef(0.0f, -0.2f, 0.0f);
+    if (!g_isMixedFace)
+        glColor3f(0.3f, 0.9f, 0.2f); // PURE일 때만
     glutSolidSphere(0.25, 16, 16);
     glPopMatrix();
 }

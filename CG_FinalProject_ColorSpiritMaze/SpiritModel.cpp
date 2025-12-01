@@ -1,52 +1,44 @@
 ﻿#include "SpiritModel.h"
-#include <GL/glut.h>
 
+// 🔥 전역 변수 실제 정의
+bool g_isMixedFace = false;
+float g_mixedR = 1.0f;
+float g_mixedG = 1.0f;
+float g_mixedB = 1.0f;
+
+void SpiritModel::setFaceColor(float r, float g, float b)
+{
+    g_isMixedFace = true;
+    g_mixedR = r;
+    g_mixedG = g;
+    g_mixedB = b;
+}
+
+void SpiritModel::clearFaceColor()
+{
+    g_isMixedFace = false;
+}
 void SpiritModel::init() {
     body.init();
     leafFace.init();
-    // fireFace, crystalFace는 init 필요 없음
 }
 
-// ----------------------------
-// 전체 정령 통합 렌더(기존 방식)
-// ----------------------------
-void SpiritModel::draw(SpiritType type) {
-    glPushMatrix();
 
-    glScalef(0.5f, 0.5f, 0.5f);
-
-    // 몸통
-    body.draw();
-
-    // 얼굴 위치
-    glPushMatrix();
-    glTranslatef(0.0f, 1.2f, 0.0f);
-
-    drawFace(type);   // 🔥 통합 → drawFace 사용
-
-    glPopMatrix(); // 얼굴
-    glPopMatrix(); // 전체
-}
-
-// ----------------------------
-// 몸통 단독 렌더
-// ----------------------------
-void SpiritModel::drawBody() {
+void SpiritModel::drawBody()
+{
     glPushMatrix();
     glScalef(0.5f, 0.5f, 0.5f);
     body.draw();
     glPopMatrix();
 }
 
-// ----------------------------
-// 얼굴 단독 렌더 (혼합도 지원)
-// ----------------------------
 void SpiritModel::drawFace(SpiritType type)
 {
     glPushMatrix();
     glScalef(0.8f, 0.8f, 0.8f);
     glTranslatef(0.0f, 0.2f, 0.0f);
 
+    // drawFace 내부에서는 색을 직접 지정하지 않음
     switch (type) {
     case RED_SPIRIT:
         fireFace.draw();
@@ -57,12 +49,26 @@ void SpiritModel::drawFace(SpiritType type)
     case BLUE_SPIRIT:
         crystalFace.draw();
         break;
+
     case MIXED_SPIRIT:
-        // 혼합은 밖에서 색만 바꾸고,
-        // 여기서는 어떤 face 모양을 쓸지 정할 때만 사용해도 됨.
+        // geometry만 fireFace 사용한다고 가정
         fireFace.draw();
         break;
     }
+
+    glPopMatrix();
+}
+
+void SpiritModel::draw(SpiritType type)
+{
+    glPushMatrix();
+    glScalef(0.5f, 0.5f, 0.5f);
+    body.draw();
+
+    glPushMatrix();
+    glTranslatef(0.0f, 1.2f, 0.0f);
+    drawFace(type);
+    glPopMatrix();
 
     glPopMatrix();
 }

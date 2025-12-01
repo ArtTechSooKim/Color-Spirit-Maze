@@ -1,8 +1,9 @@
 ﻿#include "SpiritManager.h"
 #include <GL/glut.h>
 #include <cmath>
-
-
+#include <algorithm>
+#include <cstdlib>
+extern bool g_isGoldBody;
 void SpiritManager::initSpirits() {
     model.init();
     spirits.clear();
@@ -15,15 +16,15 @@ void SpiritManager::initSpirits() {
 
     spirits.reserve(pos.size());
 
-    for (int i = 0; i < pos.size(); i++) {
+    for (int i = 0; i < (int)pos.size(); i++) {
         Spirit s;
         s.x = pos[i].first;
         s.z = pos[i].second;
 
         // R → G → B 반복
-        if (i % 3 == 0) s.type = SpiritType::RED_SPIRIT;
+        if (i % 3 == 0)      s.type = SpiritType::RED_SPIRIT;
         else if (i % 3 == 1) s.type = SpiritType::GREEN_SPIRIT;
-        else                s.type = SpiritType::BLUE_SPIRIT;
+        else                 s.type = SpiritType::BLUE_SPIRIT;
 
         spirits.push_back(s);
     }
@@ -45,35 +46,50 @@ void SpiritManager::drawSpirits() {
         glPopMatrix();
     }
 
-    // ---- 최종 결과 정령 ----
+    // ---- 타임업 결과 정령 ----
     if (showResultSpirit) {
         glPushMatrix();
-        glTranslatef(resultSpirit.x, resultSpirit.yOffset, resultSpirit.z);
 
-        // 몸통
-        model.drawBody();
+        glTranslatef(
+            resultSpirit.x,
+            resultSpirit.yOffset + std::sin(time) * 0.1f,
+            resultSpirit.z
+        );
+        glRotatef(time * 20.0f, 0, 1, 0);
 
-        // 단일 색일 때: 원래 face 그대로
+        // PURE 정령 → 기존처럼 렌더링
         if (resultSpirit.type != SpiritType::MIXED_SPIRIT) {
-            model.drawFace(resultSpirit.type);
+            model.draw(resultSpirit.type);
         }
-        // 혼합일 때: RGB 비율 색으로 Face 하나 칠하기
         else {
-            // 🌈 RGB 비율로 색 설정 (spawnResultSpirit에서 계산해둔 값)
-            // ---------------------------
-            // 🔥 혼합정령 얼굴
-            // ---------------------------
-            glDisable(GL_COLOR_MATERIAL);
-
-            glColor3f(
+            // --------------------------------------
+            // 🔥🔥 여기서부터가 Face_xxx.cpp로 플래그 전달하는 부분 🔥🔥
+            // --------------------------------------
+            // 1) 몸통 골드 모드 ON
+            g_isGoldBody = true;
+            glColor3f(1.0f, 0.84f, 0.0f);   // 금색
+            model.drawBody();               // BodyModel.draw() 호출
+            g_isGoldBody = false;           // 끝나면 다시 OFF
+            // 1) 혼합 색 활성화
+            model.setFaceColor(
                 resultSpirit.mixColorR,
                 resultSpirit.mixColorG,
                 resultSpirit.mixColorB
             );
 
-            model.drawFace(SpiritType::MIXED_SPIRIT);
+            // 3) 얼굴 렌더링 (Face_xxx.cpp에서 g_isMixedFace 플래그 읽어서 색 덮어씌움)
+            glPushMatrix();
+            glScalef(0.5f, 0.5f, 0.5f);
+            glTranslatef(0.0f, 1.2f, 0.0f);
 
-            glEnable(GL_COLOR_MATERIAL);
+            model.drawFace(resultSpirit.faceBase);
+
+            glPopMatrix();
+
+            // 4) 끝나면 혼합 색 비활성화 (PURE 정령에 영향 안 가도록)
+            model.clearFaceColor();
+
+            glDisable(GL_COLOR_MATERIAL);
             glColor3f(1, 1, 1);
         }
 
@@ -110,11 +126,11 @@ void SpiritManager::spawnResultSpirit(float px, float py, float pz, float dirX, 
 {
     resultSpirit.collected = false;
 
-    // reset 혼합 플래그
+    // 혼합 플래그 리셋
     resultSpirit.mixR = resultSpirit.mixG = resultSpirit.mixB = false;
 
-    // 적당한 yOffset
-    resultSpirit.yOffset = 1.5f;
+    // 필드 정령과 같은 높이 기준 사용
+    resultSpirit.yOffset = 1.0f;
 
     // 플레이어 앞 2m 지점
     resultSpirit.x = px + dirX * 2.0f;
@@ -124,50 +140,59 @@ void SpiritManager::spawnResultSpirit(float px, float py, float pz, float dirX, 
     int G = Gcount;
     int B = Bcount;
 
-    // ---------------------------
-    // RGB 혼합 색 계산
-    // ---------------------------
-    float total = R + G + B;
-    if (total <= 0) total = 1;  // 0 나눗셈 방지
+    // nonZero 개수로 PURE / MIXED 판정
+    int nonZero = (R > 0) + (G > 0) + (B > 0);
 
-    resultSpirit.mixColorR = (float)R / total;
-    resultSpirit.mixColorG = (float)G / total;
-    resultSpirit.mixColorB = (float)B / total;
+    // RGB 합 (혼합 색 비율 계산용)
+    float total = static_cast<float>(R + G + B);
+    if (total <= 0.0f) total = 1.0f;
 
-    // 모두 0이면 RED
-    if (R == 0 && G == 0 && B == 0) {
+    resultSpirit.mixColorR = R / total;
+    resultSpirit.mixColorG = G / total;
+    resultSpirit.mixColorB = B / total;
+
+    // 아무 것도 못 먹었을 때: 기본 RED 하나 뽑아주기
+    if (nonZero == 0) {
         resultSpirit.type = SpiritType::RED_SPIRIT;
+        resultSpirit.faceBase = SpiritType::RED_SPIRIT;
+        resultSpirit.mixColorR = 1.0f;
+        resultSpirit.mixColorG = 0.0f;
+        resultSpirit.mixColorB = 0.0f;
         return;
     }
 
-    // 3개가 모두 같으면 랜덤
-    if (R == G && G == B) {
-        int t = rand() % 3;
-        resultSpirit.type = (t == 0 ? SpiritType::RED_SPIRIT :
-            t == 1 ? SpiritType::GREEN_SPIRIT :
-            SpiritType::BLUE_SPIRIT);
+    // PURE: 한 색만 존재 (단일 정령)
+    if (nonZero == 1) {
+        if (R > 0) {
+            resultSpirit.type = SpiritType::RED_SPIRIT;
+        }
+        else if (G > 0) {
+            resultSpirit.type = SpiritType::GREEN_SPIRIT;
+        }
+        else { // B > 0
+            resultSpirit.type = SpiritType::BLUE_SPIRIT;
+        }
+        // PURE 는 faceBase 사용 안 하고, 기본 색과 모델 그대로 사용
         return;
     }
 
+    // MIXED: 두 색 이상 존재 (특별 정령)
+    resultSpirit.type = SpiritType::MIXED_SPIRIT;
+
+    // 가장 강한 색 찾기
     int maxRGB = std::max({ R, G, B });
 
-    // 단일 최대
-    if (R == maxRGB && R > G && R > B) {
-        resultSpirit.type = SpiritType::RED_SPIRIT;
-        return;
-    }
-    if (G == maxRGB && G > R && G > B) {
-        resultSpirit.type = SpiritType::GREEN_SPIRIT;
-        return;
-    }
-    if (B == maxRGB && B > R && B > G) {
-        resultSpirit.type = SpiritType::BLUE_SPIRIT;
-        return;
-    }
+    // 가장 큰 값과 같은 색 후보들 모으기 (동률 처리용)
+    std::vector<SpiritType> candidates;
+    if (R == maxRGB) candidates.push_back(SpiritType::RED_SPIRIT);
+    if (G == maxRGB) candidates.push_back(SpiritType::GREEN_SPIRIT);
+    if (B == maxRGB) candidates.push_back(SpiritType::BLUE_SPIRIT);
 
-    // 두 개가 동률로 최대 → 혼합형
-    resultSpirit.type = SpiritType::MIXED_SPIRIT;
-    resultSpirit.mixR = (R == maxRGB);
-    resultSpirit.mixG = (G == maxRGB);
-    resultSpirit.mixB = (B == maxRGB);
+    // 후보가 1개면 그대로, 2~3개면 랜덤
+    if (candidates.size() == 1) {
+        resultSpirit.faceBase = candidates[0];
+    } else {
+        int idx = rand() % candidates.size();
+        resultSpirit.faceBase = candidates[idx];
+    }
 }

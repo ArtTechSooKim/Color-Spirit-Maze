@@ -36,7 +36,7 @@ int   g_lastMs = 0;
 float g_delta = 0.0f;
 
 // 게임 타이머
-float gameTimer = 180.0f;   // 3분(초)
+float gameTimer = 15.0f;//잠시만 10초로//180.0f;   // 3분(초)
 bool timeUp = false;
 float resultMsgTimer = 0.0f;
 
@@ -257,7 +257,7 @@ void display()
     drawText(winW - 200, 80, "F1: Debug Cam");
 
     if (resultMsgTimer > 0.0f) {
-        drawBigText(winW / 2, winH - 50, "Congratulation! You Made Spirit!", 0.2f);
+        drawBigText(winW / 3, winH - 50, "Congratulation! You Made Spirit!", 0.2f);
     }
     resultMsgTimer -= g_delta;
     if (resultMsgTimer < 0) resultMsgTimer = 0;
@@ -473,7 +473,7 @@ void update()
         g_spirits->Bcount = 0;
 
         // 시간 초기화(다시 3분)
-        gameTimer = 180.0f;
+		gameTimer = 10.0f;//180.0f; ////////잠시만 10초로/////////
         timeUp = false;
 
         // 더 진행되면 안 되니까 return
