@@ -1,25 +1,57 @@
 #include "Face_Crystal.h"
+#include "Mesh.h"
 #include <GL/glut.h>
 
 extern bool g_isMixedFace;
 extern float g_mixedR, g_mixedG, g_mixedB;
 
-void FaceCrystal::draw() {
+// CrystalFace.dat
+static Mesh g_crystalFaceMesh("Debug/assets/data\\CrystalFace.dat");
 
+void FaceCrystal::draw()
+{
+    // 기본 색
     if (g_isMixedFace)
         glColor3f(g_mixedR, g_mixedG, g_mixedB);
     else
-        glColor3f(0.0f, 0.0f, 1.0f);
+        glColor3f(0.6f, 0.8f, 1.0f);
 
-    // 위쪽
-    glPushMatrix();
-    glRotatef(-90, 1, 0, 0);
-    glutSolidCone(0.5, 0.8, 20, 20);
-    glPopMatrix();
-
-    // 아래쪽
+    // 아래쪽 cone (턱)
     glPushMatrix();
     glRotatef(90, 1, 0, 0);
     glutSolidCone(0.5, 0.8, 20, 20);
+    glPopMatrix();
+
+    // 위쪽 cone (정수리)
+    glPushMatrix();
+    glRotatef(-90, 1, 0, 0);
+    glTranslatef(0.0f, 0.0f, 1.0f);
+    glutSolidCone(0.5, 0.8, 20, 20);
+    glPopMatrix();
+
+    // Mini cone (턱)
+    glPushMatrix();
+    glScalef(0.3f, 0.3f, 0.3f);
+    glRotatef(90, 1, 0, 0);
+    glTranslatef(0.0f, 0.0f, -1.0f);
+    glutSolidCone(0.5, 0.8, 20, 20);
+    glPopMatrix();
+
+    // Mini cone (정수리)
+    glPushMatrix();
+    glScalef(0.3f, 0.3f, 0.3f);
+    glRotatef(-90, 1, 0, 0);
+    glTranslatef(0.0f, 0.0f, 1.0f);
+    glutSolidCone(0.5, 0.8, 20, 20);
+    glPopMatrix();
+
+    // 가운데 컵홀더/띠 (SOR 얼굴)
+    glPushMatrix();
+    if (!g_isMixedFace)
+        glColor3f(0.8f, 0.9f, 1.0f);
+
+    glTranslatef(0.0f, 0.5f, 0.0f);  // 두 cone 사이
+    glScalef(0.6f, 0.6f, 0.6f);
+    g_crystalFaceMesh.draw();
     glPopMatrix();
 }
