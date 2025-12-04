@@ -14,7 +14,7 @@ void FaceCrystal::draw()
     if (g_isMixedFace)
         glColor3f(g_mixedR, g_mixedG, g_mixedB);
     else
-        glColor3f(0.6f, 0.8f, 1.0f);
+        glColor3f(0.0f, 0.0f, 1.0f);
 
     // ¾Æ·¡ÂÊ cone (ÅÎ)
     glPushMatrix();

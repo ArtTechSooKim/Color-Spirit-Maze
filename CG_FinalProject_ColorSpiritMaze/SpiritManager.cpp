@@ -4,15 +4,37 @@
 #include <algorithm>
 #include <cstdlib>
 extern bool g_isGoldBody;
+static void drawShadow(float x, float z) {
+    glDisable(GL_LIGHTING);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    glColor4f(0.0f, 0.0f, 0.0f, 0.3f);  // 반투명 검정
+
+    glPushMatrix();
+    glTranslatef(x, 0.02f, z);  // 바닥 바로 위
+    glRotatef(-90, 1, 0, 0);    // XZ 평면에 눕히기
+
+    // 타원형 그림자
+    GLUquadric* quad = gluNewQuadric();
+    gluDisk(quad, 0, 0.5f, 20, 1);
+    gluDeleteQuadric(quad);
+
+    glPopMatrix();
+
+    glDisable(GL_BLEND);
+    glEnable(GL_LIGHTING);
+}
+
 void SpiritManager::initSpirits() {
     model.init();
     spirits.clear();
 
     std::vector<std::pair<float, float>> pos = {
-        {-9,-11},{-5,-3},{-2,6},
-        {3,-8},{7,4},{9,-10},
-        {-9,8},{5,10},{3.5,2}
-    };
+        {-27.5f, 10.0f},{-16.0f, 28.0f},{8.0f, -28.0f},
+        {-18.0f, 7.3f},{8.0f, 28.0f},{22.0f, 0.0f},
+        {28.0f, -9.0f},{-18.0f, -10.5f},{-8.5f, -27.5f},
+        };
 
     spirits.reserve(pos.size());
 
@@ -37,6 +59,9 @@ void SpiritManager::drawSpirits() {
     for (auto& s : spirits) {
         if (s.collected) continue;
 
+        // 그림자 먼저 그리기
+        drawShadow(s.x, s.z);
+
         glPushMatrix();
         glTranslatef(s.x, s.yOffset + std::sin(time) * 0.1f, s.z);
         glRotatef(time * 20.0f, 0, 1, 0);
@@ -48,6 +73,9 @@ void SpiritManager::drawSpirits() {
 
     // ---- 타임업 결과 정령 ----
     if (showResultSpirit) {
+        // 결과 정령 그림자
+        drawShadow(resultSpirit.x, resultSpirit.z);
+
         glPushMatrix();
 
         glTranslatef(
@@ -89,8 +117,8 @@ void SpiritManager::drawSpirits() {
             // 4) 끝나면 혼합 색 비활성화 (PURE 정령에 영향 안 가도록)
             model.clearFaceColor();
 
-            glDisable(GL_COLOR_MATERIAL);
-            glColor3f(1, 1, 1);
+            //glDisable(GL_COLOR_MATERIAL);
+            //glColor3f(1, 1, 1);
         }
 
         glPopMatrix();

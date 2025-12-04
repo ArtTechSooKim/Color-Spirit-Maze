@@ -29,7 +29,7 @@ void FaceLeaf::draw()
     glScalef(0.45f, 0.45f, 0.45f);
     g_leafFaceMesh.draw();
     glPopMatrix();
-    // 얼굴 중심부 (SOR)
+    // 허리 (SOR)
     glPushMatrix();
     glTranslatef(0.0f, -1.8f, 0.0f);
     glScalef(0.7f, 0.7f, 0.7f);

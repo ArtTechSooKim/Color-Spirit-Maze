@@ -24,7 +24,7 @@ GLuint g_floorTex = 0;
 CamMode g_camMode = PLAYER_MODE;
 
 // 게임 상태
-enum GameState { MENU, PLAYING };
+enum GameState { MENU, PLAYING, TUTORIAL };
 GameState g_state = MENU;
 
 // 튜토표시시간
@@ -36,7 +36,7 @@ int   g_lastMs = 0;
 float g_delta = 0.0f;
 
 // 게임 타이머
-float gameTimer = 15.0f;//잠시만 10초로//180.0f;   // 3분(초)
+float gameTimer = 180.0f;//180.0f;   // 3분(초)
 bool timeUp = false;
 float resultMsgTimer = 0.0f;
 
@@ -163,7 +163,7 @@ void display()
     // ---------------------------
     // 튜토리얼 표시
     // ---------------------------
-    if (g_state == 2) {
+    if (g_state == TUTORIAL) {
 
         glDisable(GL_DEPTH_TEST);
         glMatrixMode(GL_PROJECTION);
@@ -174,7 +174,7 @@ void display()
         glPushMatrix();
         glLoadIdentity();
 
-        glColor3f(1, 1, 1);
+        glColor3f(1, 1, 1); 
 
         std::string msg;
 
@@ -230,6 +230,52 @@ void display()
     glLoadIdentity();
 
     glColor3f(1, 1, 1);
+	// 🔵 우측 하단: 미니맵
+    int mapSize = 120;  // 미니맵 크기
+    int startX = winW - mapSize - 10;
+    int startY = winH - mapSize - 30;
+    
+    // 미니맵 배경 (어두운 회색)
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glColor4f(0.1f, 0.1f, 0.15f, 0.85f);
+    glBegin(GL_QUADS);
+    glVertex2f(startX, startY);
+    glVertex2f(startX + mapSize, startY);
+    glVertex2f(startX + mapSize, startY + mapSize);
+    glVertex2f(startX, startY + mapSize);
+    glEnd();
+
+    // 미로 벽 그리기 (회색 점들)
+    glColor3f(0.6f, 0.6f, 0.6f);
+    glPointSize(2.0f);
+    glBegin(GL_POINTS);
+    for (int z = 0; z < 60; z++) {
+        for (int x = 0; x < 60; x++) {
+            if (g_maze->map[z][x] == 1) {
+                float mx = startX + x * 2;  // 60 -> 120px
+                float my = startY + z * 2;
+                glVertex2f(mx, my);
+            }
+        }
+    }
+    glEnd();
+
+    // 플레이어 위치 (빨간 점)
+    float px = startX + (g_camera->x + 30) * 2;
+    float py = startY + (g_camera->z + 30) * 2;
+
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glPointSize(6.0f);
+    glBegin(GL_POINTS);
+    glVertex2f(px, py);
+    glEnd();
+
+    glDisable(GL_BLEND);
+
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glPointSize(1.0f);
+    glLineWidth(1.0f);
 
     // 🔵 좌측 상단: 제한시간 + RGB 카운트
     drawText(10, winH - 20,
@@ -382,7 +428,7 @@ void update()
     // ----------------------------
     // 튜토리얼 상태 처리
     // ----------------------------
-    if (g_state == 2) {
+    if (g_state == TUTORIAL) {
         tutorialTimer += g_delta;
 
         // 시간 순서대로 문구가 바뀜
@@ -392,7 +438,7 @@ void update()
         else if (tutorialTimer < 6.0f) { /* 메시지4 */ }
         else 
         // 튜토리얼이 끝나면 PLAYING으로 전환
-        if (tutorialTimer >= 8.0f) {
+        if (tutorialTimer >= 7.0f) {
             g_state = PLAYING;
 
             glutSetCursor(GLUT_CURSOR_NONE);
@@ -472,10 +518,6 @@ void update()
         g_spirits->Gcount = 0;
         g_spirits->Bcount = 0;
 
-        // 시간 초기화(다시 3분)
-		gameTimer = 10.0f;//180.0f; ////////잠시만 10초로/////////
-        timeUp = false;
-
         // 더 진행되면 안 되니까 return
         return;
     }
@@ -487,8 +529,31 @@ void update()
 // -----------------------------
 void initGL()
 {
+	// 조명 설정
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+
+    GLfloat light_pos[] = { 0.0f, 10.0f, 0.0f, 1.0f };  // 위에서 비추는 광원
+    GLfloat light_ambient[] = { 0.3f, 0.3f, 0.3f, 1.0f };
+    GLfloat light_diffuse[] = { 0.8f, 0.8f, 0.8f, 1.0f };
+
+    glLightfv(GL_LIGHT0, GL_POSITION, light_pos);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, light_ambient);
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, light_diffuse);
+
+    glEnable(GL_COLOR_MATERIAL);
+    glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
+
+	// 안개 설정
+    glEnable(GL_FOG);
+    glFogi(GL_FOG_MODE, GL_LINEAR);
+
+    GLfloat fogColor[] = { 0.2f, 0.2f, 0.3f, 1.0f };  // 어두운 푸른 안개
+    glFogfv(GL_FOG_COLOR, fogColor);
+    glFogf(GL_FOG_START, 5.0f);   // 안개 시작 거리
+    glFogf(GL_FOG_END, 25.0f);    // 완전히 안개로 덮이는 거리
 
     // Texture 객체 생성
     Texture wallTexObj;

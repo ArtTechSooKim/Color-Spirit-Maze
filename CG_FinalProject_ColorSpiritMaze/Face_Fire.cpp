@@ -48,7 +48,7 @@ void FaceFire::draw()
     if (g_isMixedFace)
         glColor4f(g_mixedR, g_mixedG, g_mixedB, 0.7f);
     else
-        glColor4f(1.0f, 0.35f, 0.1f, 0.6f);
+        glColor4f(1.0f, 0.0f, 0.0f, 0.6f);
 
     glPushMatrix();
     glTranslatef(0.0f, -0.4f, 0.0f);
