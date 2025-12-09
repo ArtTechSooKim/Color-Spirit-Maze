@@ -83,6 +83,7 @@ void Maze::draw()
     // ----------------------------
     // Floor (Texture Repeat 60x60)
     // ----------------------------
+	glDisable(GL_FOG);
     glBindTexture(GL_TEXTURE_2D, g_floorTex);
     glColor3f(1, 1, 1);
 
@@ -95,7 +96,7 @@ void Maze::draw()
     glTexCoord2f(0, 60);         glVertex3f(-30, 0, 30);
 
     glEnd();
-
+	glEnable(GL_FOG);
 
     // ----------------------------
     // Walls — one quad per face

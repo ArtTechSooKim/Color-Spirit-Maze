@@ -45,8 +45,8 @@ bool  wPressed = false;
 bool  aPressed = false;
 bool  sPressed = false;
 bool  dPressed = false;
-float baseSpeed = 0.12f;
-float sprintSpeed = 0.12f;
+float baseSpeed = 3.0f;
+float sprintSpeed = 6.0f;
 
 // 마우스 중앙 고정용
 int winW = 1280;
@@ -458,39 +458,34 @@ void update()
         g_camera->playTime += g_delta;
         gameTimer -= g_delta;
         if (gameTimer < 0) gameTimer = 0;
-        // W를 누르고 있으면 스프린트 처리 + 앞으로 이동
+
+        // --- W: 전진 + 스프린트 ---
         if (wPressed) {
             float speed = g_camera->updateSprint(g_delta, baseSpeed, sprintSpeed);
             g_camera->sprinting = true;
-            g_camera->moveForward(speed);
+            g_camera->moveForward(speed * g_delta);   // 🔥 deltaTime 적용
         }
         else {
-            // W를 떼면 sprinting false, 스태미나 회복만 진행
             g_camera->sprinting = false;
             g_camera->updateSprint(g_delta, baseSpeed, sprintSpeed);
         }
+
+        // --- A: 좌 ---
         if (aPressed) {
-            g_camera->moveLeft(baseSpeed);
+            g_camera->moveLeft(baseSpeed * g_delta);  // 🔥 deltaTime 적용
         }
 
         // --- S: 뒤 ---
         if (sPressed) {
-            g_camera->moveBackward(baseSpeed);
+            g_camera->moveBackward(baseSpeed * g_delta); // 🔥 deltaTime 적용
         }
 
         // --- D: 우 ---
         if (dPressed) {
-            g_camera->moveRight(baseSpeed);
+            g_camera->moveRight(baseSpeed * g_delta); // 🔥 deltaTime 적용
         }
     }
-    if (g_camMode == PLAYER_MODE) {
-        bool gotSpeed = g_spirits->updateSpiritCollision(
-            g_camera->x,
-            g_camera->y,
-            g_camera->z
-        );
-
-    }
+    if (g_camMode == PLAYER_MODE) { bool gotSpeed = g_spirits->updateSpiritCollision(g_camera->x, g_camera->y, g_camera->z); }
     glutPostRedisplay();
     // ▼▼ 제한 시간 감소 ▼▼
     if (!timeUp) {
@@ -546,22 +541,26 @@ void initGL()
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_TEXTURE_2D);
 
-	// 안개 설정
     glEnable(GL_FOG);
     glFogi(GL_FOG_MODE, GL_LINEAR);
 
-    GLfloat fogColor[] = { 0.2f, 0.2f, 0.3f, 1.0f };  // 어두운 푸른 안개
+    // 🔥 어떤 GPU에서도 동일하게 보이는 중립 회색 Fog
+    GLfloat fogColor[] = { 0.65f, 0.65f, 0.65f, 1.0f };
     glFogfv(GL_FOG_COLOR, fogColor);
-    glFogf(GL_FOG_START, 5.0f);   // 안개 시작 거리
-    glFogf(GL_FOG_END, 25.0f);    // 완전히 안개로 덮이는 거리
+
+    glFogf(GL_FOG_START, 6.0f);
+    glFogf(GL_FOG_END, 28.0f);
+
+    // 🔥 ClearColor도 동일하게 맞춤 (배경색 통일)
+    glClearColor(0.65f, 0.65f, 0.65f, 1.0f);
 
     // Texture 객체 생성
     Texture wallTexObj;
     Texture floorTexObj;
 
     // 파일 불러오기 (png/jpg 가능)
-    wallTexObj.loadFromFile("Debug/assets/wall_texture.png");
-    floorTexObj.loadFromFile("Debug/assets/floor_texture.png");
+    wallTexObj.loadFromFile("assets/textures/wall_texture.png");
+    floorTexObj.loadFromFile("assets/textures/floor_texture.png");
 
     // 전역 변수에 ID 저장
     g_wallTex = wallTexObj.getID();
@@ -588,7 +587,7 @@ int main(int argc, char** argv)
     glutInit(&argc, argv);
     glutInitWindowSize(winW, winH);
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    glutCreateWindow("Spirit Maze FPS");
+    glutCreateWindow("Color Spirit Maze");
 
     initGL();
 

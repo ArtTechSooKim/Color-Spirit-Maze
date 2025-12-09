@@ -6,7 +6,7 @@ extern bool g_isMixedFace;
 extern float g_mixedR, g_mixedG, g_mixedB;
 
 // CrystalFace.dat
-static Mesh g_crystalFaceMesh("Debug/assets/data\\CrystalFace.dat");
+static Mesh g_crystalFaceMesh("assets/SOR/CrystalFace.dat");
 
 void FaceCrystal::draw()
 {

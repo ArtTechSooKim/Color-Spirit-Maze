@@ -6,7 +6,7 @@ extern bool g_isMixedFace;
 extern float g_mixedR, g_mixedG, g_mixedB;
 
 // SOR FireFace mesh
-static Mesh g_fireFaceMesh("Debug/assets/data\\FireFace.dat");
+static Mesh g_fireFaceMesh("assets/SOR/FireFace.dat");
 
 void FaceFire::draw()
 {

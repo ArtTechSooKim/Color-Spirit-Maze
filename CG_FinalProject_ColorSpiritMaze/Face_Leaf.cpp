@@ -6,7 +6,7 @@ extern bool g_isMixedFace;
 extern float g_mixedR, g_mixedG, g_mixedB;
 
 // LeafFace.dat
-static Mesh g_leafFaceMesh("Debug/assets/data\\LeafFace.dat");
+static Mesh g_leafFaceMesh("assets/SOR/LeafFace.dat");
 
 void FaceLeaf::init()
 {
